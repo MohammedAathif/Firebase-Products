@@ -10,8 +10,8 @@ on:
 
 jobs:
   build_project:
-    name: Build Project
-    runs-on: ubuntu-latest
+    name: Firebase products
+    runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v2
       - name: Set up Flutter
