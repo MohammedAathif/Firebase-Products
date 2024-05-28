@@ -1,10 +1,15 @@
+import 'dart:developer';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 class NotificationService {
+
+  FlutterTts flutterTts = FlutterTts();
   // static final NotificationService notificationService = NotificationService._internal();
   //
   // factory NotificationService() {
@@ -32,6 +37,7 @@ class NotificationService {
     tz.initializeTimeZones();
 
     FirebaseMessaging.onMessage.listen((message) {
+      log(message.notification.toString(),name: 'onMessage');
       RemoteNotification? notification = message.notification;
 
         print("notifications title: ${notification?.title}");
@@ -41,6 +47,16 @@ class NotificationService {
         showNotification(message);
 
     });
+
+    // Listen to messages when the app is in the background or terminated
+    //FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
+
+  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    // This function is called when the application is in the background or terminated.
+    print("Handling a background message: ${message.messageId}");
+    // initLocalNotifications();
+    // showNotification(message);
   }
 
   initLocalNotifications() async {
@@ -106,6 +122,8 @@ class NotificationService {
       NotificationDetails notificationDetails = NotificationDetails(android: androidNotificationDetails);
 
       Future.delayed(Duration.zero, () {
+        flutterTts.setLanguage('ta');
+        flutterTts.speak(message.notification?.title.toString() ?? '');
         flutterLocalNotificationsPlugin.show(
             0,
             message.notification?.title.toString(),
@@ -167,6 +185,7 @@ class NotificationService {
     // });
     int notificationId = 0;
 
+
     // final Directory appDir =  Directory('/storage/emulated/0/Download');
     //    // : await getApplicationDocumentsDirectory();
     //
@@ -178,6 +197,11 @@ class NotificationService {
     //         .microsecondsSinceEpoch}-statement.pdf';
     //
     // File file = File('$tempPath/$fileName');
+
+    flutterTts.setLanguage('hin-default');
+    var languages = flutterTts.getLanguages.then((value) => print('val $value'));
+    print('lang $languages');
+   flutterTts.speak('Download Started');
 
     for (int progress = 10; progress <= 100; progress += 10) {
       await Future.delayed(const Duration(seconds: 1));
@@ -199,12 +223,13 @@ class NotificationService {
             showProgress: true,
             maxProgress: 100,
             progress: progress,
-            icon: '@mipmap/ic_launcher'
+            icon: '@mipmap/ic_launcher',
           ),
         ),
         payload: 'path',
       );
     }
+
 
       flutterLocalNotificationsPlugin.cancel(notificationId);
 
@@ -220,10 +245,13 @@ class NotificationService {
       payload: 'filePath',
     );
 
+    flutterTts.speak('Download Completed');
+
   }
 
   intervalNotification() async {
     print('interval notify');
+    flutterTts.speak('Notification will arrive at 1 Minute');
     await flutterLocalNotificationsPlugin.periodicallyShow(
         15,
         'title_value',

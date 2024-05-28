@@ -3,6 +3,10 @@
    <uses-permission android:name="android.permission.INTERNET" />
    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+   <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+<!--   <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />-->
+<!--   <uses-permission android:name="android.permission.USE_EXACT_ALARM" />-->
+<!--   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />-->
    <application
         android:label="firebase_products"
         android:name="${applicationName}"
@@ -36,5 +40,12 @@
        <meta-data
            android:name="com.google.android.gms.ads.APPLICATION_ID"
            android:value="ca-app-pub-8507031572669977~2768114007" />
+
+<!--       Android 14 notification-->
+       <meta-data
+           android:name="com.google.firebase.messaging.default_notification_channel_id"
+           android:value="notification_channel"/>
+       <!-- used for schedule notification -->
+       <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
     </application>
 </manifest>

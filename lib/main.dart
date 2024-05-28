@@ -1,8 +1,10 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_products/screens/dummy.dart';
 import 'package:firebase_products/screens/singpass.dart';
 import 'package:firebase_products/screens/sqfExample.dart';
 import 'package:firebase_products/widgets/common.dart';
+import 'package:firebase_products/widgets/notification_services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,6 +24,37 @@ void main() async {
 //  await Firebase.initializeApp();
   try {
    await Firebase.initializeApp();
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+   //
+   // // Listen to messages while the app is in the foreground
+   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+     print("Received message from FCM foreground: ${message.messageId}");
+     // Extract data from message (data or notification payload)
+     RemoteNotification? notification = message.notification;
+     if (notification != null) {
+       print("Notification title: ${notification.title}");
+       print("Notification body: ${notification.body}");
+       NotificationService().showNotification(message);
+     }
+   });
+
+   NotificationService().init();
+
+   // // Request permission for notifications (optional)
+   NotificationSettings settings = await messaging.requestPermission(
+     alert: true,
+     announcement: true,
+     badge: true,
+     provisional: false,
+   );
+
+   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+     print('User granted permission for notifications!');
+   } else {
+     print('User declined or has not granted permission for notifications.');
+   }
+
   } catch (e) {
     print('Error initializing Firebase: $e');
   }

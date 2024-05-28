@@ -39,8 +39,8 @@ dependencies:
   firebase_database: ^10.2.1
   firebase_core:
   provider:
-  firebase_messaging:
-  flutter_local_notifications: ^16.3.0
+  firebase_messaging: ^14.3.0
+  flutter_local_notifications: ^17.0.0
   permission_handler:
   firebase_storage:
   image_picker: ^1.0.0
@@ -54,6 +54,7 @@ dependencies:
   http:
   sqflite: ^2.2.8
   path:
+  flutter_tts:
 
 dev_dependencies:
   flutter_test:
