@@ -62,12 +62,6 @@ buildAlertDialog(context,RealtimeDbNotifier notifier) {
 }
 
 Widget buildButton(context,String name, {routeName, onPressed, logName}) {
-  // 240 160    = 400  // 935 R
-  // 160 120 80 = 360  // 1100 A
-  // 160 140 85 = 385
-  // 240 160 80 = 480
-  // 150
-  //  35 225
   return SizedBox(
     width: 250,
     height: 50,
